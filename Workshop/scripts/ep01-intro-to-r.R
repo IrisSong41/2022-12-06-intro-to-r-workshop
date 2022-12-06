@@ -33,7 +33,7 @@
 # Calculate 10 plus 2 all divided by 3 and then squared
 
 # Solution:
-
+((10+2)/3)^2
 
 # Storing values
 a <- 3              # assign the number 3 to OBJECT (variable) called "a"
@@ -65,7 +65,9 @@ a + b               # we can add them together just like numbers
 # Logical operators
 #
 # == != < > >= <= !
-1 < 124
+1 > 124
+! 1>4
+
 
 #
 # Sensible object names are sensible ...
@@ -85,25 +87,27 @@ ekljre2jklwef023ijlefj93jkl23rj90f32k <- 1
 #
 # Assign the name of this workshop to a object with a good name.
 #
-# Solution: [Hint:       <- "Introduction to R"]
+# Solution: [Hint:    title   <- "Introduction to R"]
 
 # Assign the name of video conferencing tool to an object
 #
 # Solution: [Hint:      <- "Zoom"]
 
 
+
 # Which of these are valid object names: [Hint: Try them out]
 #
-#  min_height
+#  
+min_height <-4
 #  max.height
 #  _age
 #  .mass
-#  MaxLength
+#  Max.Length
 #  min-length
 #  2widths
 #  celsius2kelvin
-
-
+celsius2kelvin <-2
+.mass <- 22
 #
 # Topic: Displaying results
 #
@@ -114,9 +118,9 @@ weight_lb          # and so does typing the name of the object
 
 # There are 2 and a bit pounds in a kilogram 
 #
-# 2.20462 * weight_lb
-# weight_lb <- 57.5
-# weight_kg <- 2.20462 * weight_lb
+2.20462 * weight_lb
+weight_lb <- 57.5
+weight_kg <- 2.20462 * weight_lb
 #
 
 # 
@@ -125,11 +129,11 @@ weight_lb          # and so does typing the name of the object
 # 
 # What are the values after each statement in the following?
 # 
-# mass <- 47.5            # mass is: 
-# age  <- 122             # age is:
-# mass <- mass * 2.0      # mass is:
-# age  <- age - 20        # age is:
-# mass_index <- mass/age  # mass_index is: 
+ mass <- 47.5            # mass is: 
+ age  <- 122             # age is:
+mass <- mass * 2.0      # mass is:
+ age   <-   age - 20        # age is:
+ mass_index <- mass/age  # mass_index is: 
 #
 # How do we do we know if our answers are correct ? 
 # [Hint: <highlight> [ALT][ENTER]
@@ -178,18 +182,21 @@ m = cms / 100
 # or if we just want to know bount the arguments, use: args()
 
 # Argument have default order - but can re-ordered using names
-#
-# round(3.14159, 2)
+
+pie <- pi 
+
+
+# round(pi, 9)
 # round(digits = 2, x = 3.14159)
 
 #
 # Exercise
 #
-# what does the function called log10() do ?  Can you test it ?
+# what does the function called ?log10() do ?  Can you test it ?
 #
 # Answer:
 
-
+log10(10)
 
 #
 # Topic: Vectors and Data Types
@@ -202,16 +209,22 @@ m = cms / 100
 #
 #  4.6, 3000, 50000
 
+glengths <- c(4.6, 3000, 50000)
+
 # and repeat to create a vector of species
 #
 #  "ecoli", "human", "corn"
 
+species <- c("ecoli", "human", "corn")
+length(species)
+
+str(species)
 # use length() to obtain how many elements a vector contains
 
 # we can also ask what structure of our vectors look like with str()
 
 # and also see what class they are with class()
-
+class(species)
 
 # and btw, there are other classes as well ...
 #
@@ -227,11 +240,13 @@ m = cms / 100
 # multiply glengths by 5
 # add glength to itsself
 
+glengths * 5
 # appending and prepending elememts to a vector
 #
 # c(vector, value)
 # c(value, vector)
-#
+
+c(-799,glengths, glengths, 4500)
 
 
 
@@ -287,6 +302,7 @@ length_species
 # create a vector
 animals <- c("mouse", "rat", "dog", "cat")
 
+animals [c(2,3)]
 # reference (access) the second element using [] 
 
 # access the subset consisting of element 3 and element 2
@@ -298,13 +314,15 @@ animals <- c("mouse", "rat", "dog", "cat")
 
 # Conditional subsetting
 #
-# weight_g <- c(21,   34,    39,   54,   55)
-# weight_g[   c(TRUE, FALSE, TRUE, TRUE, FALSE)]
+weight_g <- c(21,   34,    39,   54,   55)
+weight_g[   c(TRUE, FALSE, TRUE, TRUE, FALSE)]
 # 
 
 # using comparison operators to generate a 'logical' vector 
 #
 # vector of which weight are greater then 50
+
+weight_g [c(> 50)]
 
 # ... and the use this to subset the data vector
 
