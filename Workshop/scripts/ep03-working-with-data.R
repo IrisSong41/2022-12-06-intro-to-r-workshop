@@ -40,7 +40,7 @@ download.file(url = "https://ndownloader.figshare.com/files/2292169",
 
 
 # Read some data from a CSV file
-surveys <- read.csv("data_raw/portal_data_joined.csv")
+s <- read.csv("data_raw/portal_data_joined.csv")
 
 # lets remind ourselves what the dataframe looks like with str(), view() etc ...
 
@@ -58,7 +58,7 @@ surveys <- read.csv("data_raw/portal_data_joined.csv")
 
 # Load up the required "dplyr" library from the TidyVerse
 
-
+library(dplyr)
 #
 # Some common dplyr functions - select(), filter(), mutate(), group_by(), summarize()
 #
@@ -67,10 +67,15 @@ surveys <- read.csv("data_raw/portal_data_joined.csv")
 # select() - subset of columns (variables)
 #
 
+select(s, year)
+select(s, sex)
+
 # include particular columns: eg plot_id, species_id and weight
+select(s, plot_id, species_id, weight)
+
 
 # exclude particular columns, eg record_id and species_id using a '-'
-
+select(s, -record_id, -species_id)
 
 
 #
@@ -78,20 +83,30 @@ surveys <- read.csv("data_raw/portal_data_joined.csv")
 #
 
 # all rows where year is 1995
+filter(s, year == 1995)
+
 
 # oldest year obversation rows (hint max(year, ))
 
+filter(s, year == min (year) )
+
 # longest hindfoot_length
-
-
+filter(s, hindfoot_length == max(hindfoot_length))
+max(s$hindfoot_length[!is.na ((s$hindfoot_length)] )
 
 #
 # Pipes - plumbing thing together to create pipelines
 #
 
 # using temp dataframes, get rows where weight greater then 5 and show only species_id, sex and weight
+f <- filter(s, weight > 5)
+select(f, species_id, sex, weight)
 
+select(filter(s, weight > 5), species_id, sex, weight )
 
+s %>%   #pipeline. first step normal define the dataset. 
+  filter(weight > 5) %>%
+  select(species_id, sex, weight)
 # and we can store/assign the final result to an object
 
 
@@ -104,7 +119,9 @@ surveys <- read.csv("data_raw/portal_data_joined.csv")
 # Using pipes, subset 'surveys' dataframe to extract animals collected before 1995 and 
 # retain only the columns called year, sex, and weight.
 
-
+subset <- s %>%  # wanna save the pipeline results , need to assign it from the beginning. 
+  filter(year<1995) %>%
+  select(year, sex, weight)
 
 
 
@@ -113,13 +130,22 @@ surveys <- read.csv("data_raw/portal_data_joined.csv")
 #
 
 # lets add a column called weight_kg by dividing the weight by 1000
+s <- s %>%
+  mutate(weight_kg = weight / 1000)
 
 
 # we can also add multiple columns at the same time - ie, we cloud also add weight_lb by multiplying by 2.2
 
+mutate(s, weight_kg = weight / 1000, weight_lb = weight_kg*2.2)
 
 # using head() can be useful now
 
+s %>% 
+  filter(year<1995) %>%
+  select(year, sex, weight) %>%
+  tail(10) %>%
+  head(1) # head() default is 6, or you can add the # you want to show head(10) for example. 
+  
 
 # NA means "not available". We check is a data value is NA with the function is.na() and ! means 'not'
 
@@ -137,16 +163,25 @@ surveys <- read.csv("data_raw/portal_data_joined.csv")
 #
 # Hint: think about how the commands should be ordered to produce this data frame!
 
+s %>%
+  select(species_id) %>%
+  mutate(hindfoot_cm = hindfoot_length/10) %>% 
+  filter(hindfoot_cm <3, !is.na (hindfoot_cm)) 
+
 
 
 #
 # group_by() - collect like things together to allow us to summarise them
 #
-surveys %>%
+s %>%
   group_by(sex) %>%
   summarize(mean_weight = mean(weight, na.rm = TRUE))
 
 # we can include multiple group_by variables, eg species_id
+
+s %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE))
 
 
 #
@@ -154,6 +189,7 @@ surveys %>%
 #
 
 # count how many observations of each year
+count(s,)
 
 # equivalent to a group_by() and then using the n() function as a summary
 
@@ -206,7 +242,7 @@ library(tidyr)
 #          
 #
 
-cars_wide <- data.frame (
+cars_wide <- data.frame (  #create dataframes, not from upload a csv file. 
   day   = c("sat", "sun"),
   tesla = c(2, 63),
   ford  = c(1,71),
@@ -228,11 +264,18 @@ cars_wide <- data.frame (
 
 # tidyr's pivot_longer() can do this for us
 
+cars_long <- cars_wide %>%
+pivot_longer(names_to = "make", values_to = "qty" , cols = -day) 
+#exclude the day column from the piviting. but it will shows up at the final resutls. 
+
+cars_long %>%
+  pivot_wider(names_from = "make", values_from = "qty")
+
 # and the reverse 
 
 
 # now we can apply to our surveys data
-surveys_long <- surveys %>%
+s_long <- s %>%
   filter(!is.na(weight)) %>%
   group_by(plot_id, genus) %>%
   summarize(mean_weight = mean(weight))
